@@ -1,5 +1,5 @@
 //$Id$
-package com.adventnet.crm.tpi.ctiapi.actions;
+package  com.adventnet.crm.tpi.ctiapi.actions;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,7 +14,7 @@ import com.adventnet.crm.tpi.ctiapi.util.CtiApiUtil;
 public class TwilioSIPConfigAction extends CrmActionSupport
 {
 	private static final Logger LOGGER = Logger.getLogger(TwilioSIPConfigAction.class.getName());
-	
+
 	public String execute()
 	{
 		String responseStr = "";
@@ -22,15 +22,15 @@ public class TwilioSIPConfigAction extends CrmActionSupport
 		{
 			String zgid = request.getAttribute(CrmConstants.ZGID_FROM_FILTER)+"";
 			String zuid = request.getAttribute(CrmConstants.ZUID_FROM_REQUEST)+"";
-			
+
 			String twiSipZgid = zgid;
 			String twiSipZuid = zuid;
-			
+
 			if( twiSipZgid.equals(zgid) && twiSipZuid.equals(zuid) )
 			{
 				String event = request.getParameter("event");
 				JSONObject sipConfObj = CtiApiUtil.retrieveSIPConfigInfoFromRedis(zgid);
-				
+
 				if( "add".equals(event) )
 				{
 					String enableSip = request.getParameter("enableSip");
@@ -38,13 +38,13 @@ public class TwilioSIPConfigAction extends CrmActionSupport
 					String sipPassword = request.getParameter("sipPassword");
 					String domain = request.getParameter("sipDomain");
 					String callRatePrefix = request.getParameter("sipCallrate");
-					
+
 					sipConfObj.put("enablesip", enableSip);
 					sipConfObj.put("sipusername", sipUsername);
 					sipConfObj.put("sippassword", sipPassword);
 					sipConfObj.put("sipdomain", domain);
 					sipConfObj.put("sipcallrateprefix", callRatePrefix);
-					
+
 					CtiApiUtil.storeSIPConfigContentIntoZFS(zgid, sipConfObj.toString());
 					CtiApiUtil.addSIPConfigInfoInRedis(zgid, sipConfObj.toString());
 					return null;
